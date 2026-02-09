@@ -249,19 +249,7 @@ REACT_APP_API_URL=http://localhost:8000/api
 REACT_APP_ENV=development
 ```
 
-## 🤝 Contributing
 
-1. Create feature branch: `git checkout -b feature/name`
-2. Make changes and test
-3. Submit pull request
-
-## 📄 License
-
-MIT License
-
-## 📞 Support
-
-For issues and questions, please open a GitHub issue.
 
 ---
 
