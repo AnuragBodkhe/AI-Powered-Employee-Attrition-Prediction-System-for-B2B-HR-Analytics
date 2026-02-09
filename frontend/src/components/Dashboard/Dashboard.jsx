@@ -16,6 +16,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState({});
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     fetchDashboardData();
@@ -25,7 +26,8 @@ function Dashboard() {
     setLoading(true);
     setError('');
     try {
-      const [metricsRes, riskRes, deptRes, salaryRes, filtersRes] = await Promise.all([
+      // Fetch all data in parallel
+      const responses = await Promise.allSettled([
         dashboardAPI.getMetrics(),
         dashboardAPI.getRiskDistribution(),
         dashboardAPI.getDepartmentComparison(),
@@ -33,20 +35,50 @@ function Dashboard() {
         dashboardAPI.getFilterOptions(),
       ]);
 
-      setMetrics(metricsRes.data);
-      setRiskData(riskRes.data);
-      setDepartmentData(deptRes.data);
-      setSalaryData(salaryRes.data);
-      setFilterOptions(filtersRes.data);
+      // Check if all requests succeeded
+      if (responses[0].status === 'fulfilled' && responses[0].value?.data) {
+        setMetrics(responses[0].value.data);
+      }
+      if (responses[1].status === 'fulfilled' && responses[1].value?.data) {
+        setRiskData(responses[1].value.data);
+      }
+      if (responses[2].status === 'fulfilled' && responses[2].value?.data) {
+        setDepartmentData(responses[2].value.data);
+      }
+      if (responses[3].status === 'fulfilled' && responses[3].value?.data) {
+        setSalaryData(responses[3].value.data);
+      }
+      if (responses[4].status === 'fulfilled' && responses[4].value?.data) {
+        setFilterOptions(responses[4].value.data);
+      }
+
+      // Check if any failed
+      const failed = responses.some(r => r.status === 'rejected');
+      if (failed && retryCount < 2) {
+        // Auto-retry if some failed
+        setTimeout(() => {
+          setRetryCount(retryCount + 1);
+          fetchDashboardData();
+        }, 1000);
+      } else if (failed) {
+        setError('Unable to load some dashboard data. Some features may not be available.');
+      }
     } catch (err) {
-      setError('Failed to load dashboard data');
-      console.error(err);
+      console.error('Dashboard fetch error:', err);
+      if (retryCount < 2) {
+        setTimeout(() => {
+          setRetryCount(retryCount + 1);
+          fetchDashboardData();
+        }, 1000);
+      } else {
+        setError('Failed to load dashboard data. Please check your connection and try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
+  if (loading && retryCount === 0) {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
@@ -63,13 +95,16 @@ function Dashboard() {
         <div className="flex items-start gap-4">
           <span className="text-2xl">⚠️</span>
           <div>
-            <h3 className="font-semibold text-red-900">Unable to Load Dashboard</h3>
+            <h3 className="font-semibold text-red-900">Failed to Load Dashboard</h3>
             <p className="text-red-700 text-sm mt-1">{error}</p>
             <button
-              onClick={fetchDashboardData}
+              onClick={() => {
+                setRetryCount(0);
+                fetchDashboardData();
+              }}
               className="btn-secondary py-2 px-4 text-sm rounded-lg mt-4"
             >
-              Try Again
+              🔄 Try again
             </button>
           </div>
         </div>
