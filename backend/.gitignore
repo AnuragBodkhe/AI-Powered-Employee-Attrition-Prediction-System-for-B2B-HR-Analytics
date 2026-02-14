@@ -1,0 +1,54 @@
+# Python and package cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Data and uploads
+uploads/
+*.csv
+*.xlsx
+*.xls
+
+# Models
+models/*.pkl
+models/*.joblib
+
+# Database
+*.db
+*.sqlite
+
+# Coverage
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
