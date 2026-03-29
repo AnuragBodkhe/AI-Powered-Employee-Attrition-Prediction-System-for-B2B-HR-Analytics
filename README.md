@@ -158,9 +158,7 @@ docker run -p 5000:5000 eaps
 
 ## 👨‍💻 Authors
 
-- **Anurag Bodkhe** — MIT School of Computing  
-- Research Paper: *AI-Powered Employee Attrition Prediction System for B2B HR Analytics*
-
+- **Anurag Bodkhe** - Bodkheanurag235@gmail.com
 ---
 
 ## 📄 License
