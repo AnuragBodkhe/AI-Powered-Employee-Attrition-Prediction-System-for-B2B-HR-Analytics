@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+{% block title %}Predict{% endblock %}
+{% block page_title %}🎯 Single Employee Predictor{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>🎯 Attrition Risk Prediction</h2>
+  <p>Fill in employee details to get an instant attrition risk score with AI explanation and downloadable report.</p>
+</div>
+
+<!-- Model selector -->
+<div class="model-selector-bar">
+  <label for="model-select">Model:</label>
+  <select id="model-select">
+    <option value="Random Forest">Random Forest (Best · AUC 0.9979)</option>
+    <option value="XGBoost">XGBoost (AUC 0.9972)</option>
+    <option value="SVM">SVM (AUC 0.9746)</option>
+    <option value="Logistic Regression">Logistic Regression (AUC 0.8612)</option>
+  </select>
+</div>
+
+<!-- Form -->
+<form id="predict-form">
+
+<!-- ── Employee Identity ──────────────────────────────── -->
+<div class="form-section" style="margin-bottom:20px">
+  <h3>🪪 Employee Identity</h3>
+  <div class="grid-2" style="gap:16px">
+    <div class="form-group">
+      <label>Employee Name</label>
+      <input type="text" id="emp-name" placeholder="e.g. John Smith" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;width:100%;font-size:0.9rem">
+    </div>
+    <div class="form-group">
+      <label>Employee ID</label>
+      <input type="text" id="emp-id" placeholder="e.g. EMP-1042" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;width:100%;font-size:0.9rem">
+    </div>
+  </div>
+</div>
+
+<div class="grid-3" style="gap:20px;margin-bottom:20px">
+
+  <!-- Col 1: Personal -->
+  <div class="form-section">
+    <h3>👤 Personal</h3>
+    <div class="form-group">
+      <label>Age <span class="range-value" id="val-age">35</span></label>
+      <input type="range" name="Age" min="18" max="60" value="35"
+             oninput="document.getElementById('val-age').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Gender</label>
+      <select name="Gender"><option>Male</option><option>Female</option></select>
+    </div>
+    <div class="form-group">
+      <label>Marital Status</label>
+      <select name="MaritalStatus">
+        <option>Single</option><option>Married</option><option>Divorced</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Distance From Home (km) <span class="range-value" id="val-dist">10</span></label>
+      <input type="range" name="DistanceFromHome" min="1" max="30" value="10"
+             oninput="document.getElementById('val-dist').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Num Companies Worked <span class="range-value" id="val-nc">2</span></label>
+      <input type="range" name="NumCompaniesWorked" min="0" max="9" value="2"
+             oninput="document.getElementById('val-nc').textContent=this.value">
+    </div>
+  </div>
+
+  <!-- Col 2: Job Details -->
+  <div class="form-section">
+    <h3>💼 Job Details</h3>
+    <div class="form-group">
+      <label>Department</label>
+      <select name="Department">
+        <option>Sales</option>
+        <option>Research &amp; Development</option>
+        <option>Human Resources</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Job Role</label>
+      <select name="JobRole">
+        <option>Sales Executive</option>
+        <option>Research Scientist</option>
+        <option>Laboratory Technician</option>
+        <option>Manufacturing Director</option>
+        <option>Healthcare Representative</option>
+        <option>Manager</option>
+        <option>Sales Representative</option>
+        <option>Research Director</option>
+        <option>Human Resources</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Job Level <span class="range-value" id="val-jl">2</span></label>
+      <input type="range" name="JobLevel" min="1" max="5" value="2"
+             oninput="document.getElementById('val-jl').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Job Involvement (1–4) <span class="range-value" id="val-ji">3</span></label>
+      <input type="range" name="JobInvolvement" min="1" max="4" value="3"
+             oninput="document.getElementById('val-ji').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Job Satisfaction (1–4) <span class="range-value" id="val-js">3</span></label>
+      <input type="range" name="JobSatisfaction" min="1" max="4" value="3"
+             oninput="document.getElementById('val-js').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>OverTime</label>
+      <select name="OverTime"><option>No</option><option>Yes</option></select>
+    </div>
+    <div class="form-group">
+      <label>Business Travel</label>
+      <select name="BusinessTravel">
+        <option>Non-Travel</option>
+        <option selected>Travel_Rarely</option>
+        <option>Travel_Frequently</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Col 3: Compensation & Experience -->
+  <div class="form-section">
+    <h3>💰 Compensation &amp; Experience</h3>
+    <div class="form-group">
+      <label>Monthly Income ($)</label>
+      <input type="number" name="MonthlyIncome" value="5000" min="1000" max="20000" step="500">
+    </div>
+    <div class="form-group">
+      <label>Hourly Rate</label>
+      <input type="number" name="HourlyRate" value="65" min="30" max="100" step="5">
+    </div>
+    <div class="form-group">
+      <label>Monthly Rate</label>
+      <input type="number" name="MonthlyRate" value="14000" min="2000" max="27000" step="500">
+    </div>
+    <div class="form-group">
+      <label>Percent Salary Hike <span class="range-value" id="val-ph">14</span></label>
+      <input type="range" name="PercentSalaryHike" min="11" max="25" value="14"
+             oninput="document.getElementById('val-ph').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Stock Option Level <span class="range-value" id="val-so">1</span></label>
+      <input type="range" name="StockOptionLevel" min="0" max="3" value="1"
+             oninput="document.getElementById('val-so').textContent=this.value">
+    </div>
+  </div>
+</div>
+
+<!-- Row 2: Work Environment + Tenure -->
+<div class="grid-2" style="gap:20px;margin-bottom:20px">
+  <div class="form-section">
+    <h3>🌿 Work Environment</h3>
+    <div class="grid-2" style="gap:16px">
+      <div class="form-group">
+        <label>Environment Satisfaction (1–4) <span class="range-value" id="val-es">3</span></label>
+        <input type="range" name="EnvironmentSatisfaction" min="1" max="4" value="3"
+               oninput="document.getElementById('val-es').textContent=this.value">
+      </div>
+      <div class="form-group">
+        <label>Work-Life Balance (1–4) <span class="range-value" id="val-wl">3</span></label>
+        <input type="range" name="WorkLifeBalance" min="1" max="4" value="3"
+               oninput="document.getElementById('val-wl').textContent=this.value">
+      </div>
+      <div class="form-group">
+        <label>Relationship Satisfaction (1–4) <span class="range-value" id="val-rs">3</span></label>
+        <input type="range" name="RelationshipSatisfaction" min="1" max="4" value="3"
+               oninput="document.getElementById('val-rs').textContent=this.value">
+      </div>
+      <div class="form-group">
+        <label>Performance Rating (1–4) <span class="range-value" id="val-pr">3</span></label>
+        <input type="range" name="PerformanceRating" min="1" max="4" value="3"
+               oninput="document.getElementById('val-pr').textContent=this.value">
+      </div>
+      <div class="form-group">
+        <label>Training Times Last Year <span class="range-value" id="val-tr">3</span></label>
+        <input type="range" name="TrainingTimesLastYear" min="0" max="6" value="3"
+               oninput="document.getElementById('val-tr').textContent=this.value">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>📅 Tenure &amp; Growth</h3>
+    <div class="form-group">
+      <label>Years at Company <span class="range-value" id="val-yc">5</span></label>
+      <input type="range" name="YearsAtCompany" min="0" max="40" value="5"
+             oninput="document.getElementById('val-yc').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Years in Current Role <span class="range-value" id="val-yr">3</span></label>
+      <input type="range" name="YearsInCurrentRole" min="0" max="18" value="3"
+             oninput="document.getElementById('val-yr').textContent=this.value">
+    </div>
+    <div class="form-group">
+      <label>Years Since Last Promotion <span class="range-value" id="val-yp">1</span></label>
+      <input type="range" name="YearsSinceLastPromotion" min="0" max="15" value="1"
+             oninput="document.getElementById('val-yp').textContent=this.value">
+    </div>
+    <div style="margin-top:24px;text-align:center">
+      <button type="submit" class="btn btn-primary btn-block" id="predict-btn">
+        <span id="predict-spinner" class="spinner hidden"></span>
+        🔍 Predict Attrition Risk
+      </button>
+    </div>
+  </div>
+</div>
+</form>
+
+<!-- Result Panel -->
+<div class="result-panel" id="result-panel">
+  <!-- Employee badge -->
+  <div id="emp-badge" style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding:14px 18px;background:var(--surface2);border-radius:12px;border:1px solid var(--border)">
+    <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary2));display:flex;align-items:center;justify-content:center;font-size:1.4rem">👤</div>
+    <div>
+      <div id="badge-name" style="font-weight:700;font-size:1rem;color:var(--text)">—</div>
+      <div id="badge-id" style="font-size:0.8rem;color:var(--muted)">—</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:10px">
+      <button class="btn btn-outline btn-sm" id="download-json-btn">📄 Download JSON Report</button>
+      <button class="btn btn-outline btn-sm" id="download-csv-report-btn">📊 Download CSV Report</button>
+    </div>
+  </div>
+
+  <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:20px">📋 Prediction Result</h3>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="metric-card" style="text-align:center">
+      <div class="card-title">Prediction</div>
+      <div class="card-value" id="res-prediction">—</div>
+    </div>
+    <div class="metric-card" style="text-align:center">
+      <div class="card-title">Probability</div>
+      <div class="card-value" id="res-probability">—</div>
+    </div>
+    <div class="metric-card" style="text-align:center">
+      <div class="card-title">Risk Level</div>
+      <div id="res-risk" style="margin-top:8px">—</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="prob-bar-wrap">
+    <div class="prob-bar" id="prob-bar" style="width:0%">0%</div>
+  </div>
+
+  <div class="grid-2" style="gap:20px;margin-top:20px">
+    <!-- SHAP chart -->
+    <div class="chart-box">
+      <h3>🧠 Top Factors Driving This Prediction</h3>
+      <div id="shap-chart" style="height:280px"></div>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:8px">
+        🔴 Positive SHAP = increases attrition risk &nbsp;|&nbsp; 🟢 Negative SHAP = decreases risk
+      </p>
+    </div>
+    <!-- HR Recommendations -->
+    <div>
+      <h3 style="font-size:0.85rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">
+        💡 HR Recommendations
+      </h3>
+      <div id="recommendations"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Error panel -->
+<div class="alert alert-danger hidden" id="error-panel"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Store last result for download
+let _lastResult = null;
+let _lastPayload = null;
+
+document.getElementById('predict-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn     = document.getElementById('predict-btn');
+  const spinner = document.getElementById('predict-spinner');
+  btn.disabled  = true;
+  spinner.classList.remove('hidden');
+  document.getElementById('result-panel').classList.remove('visible');
+  document.getElementById('error-panel').classList.add('hidden');
+
+  // Collect form data
+  const fd = new FormData(this);
+  const payload = { model_name: document.getElementById('model-select').value };
+  fd.forEach((v, k) => {
+    // Convert numeric strings to numbers; keep strings for categoricals
+    const asNum = Number(v);
+    payload[k] = (v !== '' && !isNaN(asNum) && v.trim() !== '') ? asNum : v;
+  });
+  _lastPayload = { ...payload };
+
+  try {
+    const resp = await fetch('/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
+
+    if (data.error) throw new Error(data.error);
+    _lastResult = data;
+
+    // Employee badge
+    const empName = document.getElementById('emp-name').value.trim() || 'Unknown Employee';
+    const empId   = document.getElementById('emp-id').value.trim()   || 'No ID';
+    document.getElementById('badge-name').textContent = empName;
+    document.getElementById('badge-id').textContent   = 'ID: ' + empId;
+
+    // Populate result
+    const probPct = (data.probability * 100).toFixed(1);
+    document.getElementById('res-prediction').textContent =
+      data.prediction === 'Leave' ? '🔴 Leave' : '🟢 Stay';
+    document.getElementById('res-probability').textContent = probPct + '%';
+
+    const riskEl = document.getElementById('res-risk');
+    riskEl.innerHTML = `<span class="risk-badge risk-${data.risk_level}">${
+      {'HIGH':'🔴','MEDIUM':'🟡','LOW':'🟢'}[data.risk_level]} ${data.risk_level}</span>`;
+
+    const bar   = document.getElementById('prob-bar');
+    const color = data.risk_level === 'HIGH' ? '#ef4444'
+                : data.risk_level === 'MEDIUM' ? '#f59e0b' : '#10b981';
+    bar.style.background = color;
+    bar.style.width      = probPct + '%';
+    bar.textContent      = probPct + '%';
+
+    // SHAP chart
+    if (data.shap && data.shap.length) {
+      const shap   = data.shap.slice().reverse();
+      const colors = shap.map(d => d.shap > 0 ? '#ef4444' : '#10b981');
+      Plotly.newPlot('shap-chart', [{
+        type: 'bar', orientation: 'h',
+        x: shap.map(d => d.shap),
+        y: shap.map(d => d.feature),
+        marker: { color: colors },
+        hovertemplate: '<b>%{y}</b><br>SHAP: %{x:.4f}<extra></extra>',
+      }], {
+        paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+        font: { color: '#e2e8f0', size: 11 },
+        xaxis: { gridcolor: 'rgba(255,255,255,0.08)', zeroline: true, zerolinecolor: '#555', title: 'SHAP Value' },
+        yaxis: { gridcolor: 'transparent' },
+        margin: { t: 10, b: 40, l: 160, r: 20 },
+      }, { responsive: true, displayModeBar: false });
+    } else {
+      document.getElementById('shap-chart').innerHTML =
+        '<p style="color:var(--muted);text-align:center;padding:40px 0">SHAP not available for this model type</p>';
+    }
+
+    // Recommendations
+    const recs = [];
+    if (payload.OverTime === 'Yes')               recs.push(['⚠️', 'Overtime detected — consider workload redistribution or compensation review']);
+    if ((payload.JobSatisfaction  || 3) <= 2)     recs.push(['⚠️', 'Low job satisfaction — schedule 1:1 feedback session']);
+    if ((payload.WorkLifeBalance  || 3) <= 2)     recs.push(['⚠️', 'Poor work-life balance — review schedule flexibility options']);
+    if ((payload.YearsSinceLastPromotion || 0)>=5)recs.push(['⚠️', 'No promotion in 5+ years — discuss career growth roadmap']);
+    if ((payload.MonthlyIncome   || 5000) < 3000) recs.push(['⚠️', 'Below-average income — benchmark vs. market rates']);
+    if ((payload.EnvironmentSatisfaction||3) <= 2) recs.push(['⚠️', 'Low environment satisfaction — investigate team/workspace issues']);
+    if ((payload.JobInvolvement  || 3) <= 2)      recs.push(['⚠️', 'Low job involvement — consider re-engagement or role rotation']);
+    if ((payload.TrainingTimesLastYear||3) <= 1)  recs.push(['💡', 'Minimal training — increase learning & development opportunities']);
+    if (!recs.length) recs.push(['✅', 'No immediate red flags — maintain current engagement strategy']);
+
+    document.getElementById('recommendations').innerHTML = recs.map(([icon, text]) =>
+      `<div class="rec-item ${icon==='✅'?'good':''}">
+         <span class="rec-icon">${icon}</span><span>${text}</span>
+       </div>`
+    ).join('');
+
+    document.getElementById('result-panel').classList.add('visible');
+  } catch (err) {
+    const ep = document.getElementById('error-panel');
+    ep.textContent = '❌ ' + err.message;
+    ep.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    spinner.classList.add('hidden');
+  }
+});
+
+// ── Download JSON Report ────────────────────────────────────────────────────
+document.getElementById('download-json-btn').addEventListener('click', () => {
+  if (!_lastResult) return;
+  const empName = document.getElementById('emp-name').value.trim() || 'Unknown';
+  const empId   = document.getElementById('emp-id').value.trim()   || 'N/A';
+  const report  = {
+    report_type: 'EAPS Individual Attrition Report',
+    generated_at: new Date().toISOString(),
+    employee: { name: empName, id: empId },
+    model_used: document.getElementById('model-select').value,
+    result: {
+      prediction:  _lastResult.prediction,
+      probability: (_lastResult.probability * 100).toFixed(2) + '%',
+      risk_level:  _lastResult.risk_level,
+    },
+    shap_factors: _lastResult.shap || [],
+    input_features: _lastPayload,
+  };
+  const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `eaps_report_${empId.replace(/\s+/g,'_')}_${Date.now()}.json`;
+  a.click();
+});
+
+// ── Download CSV Report ──────────────────────────────────────────────────────
+document.getElementById('download-csv-report-btn').addEventListener('click', () => {
+  if (!_lastResult) return;
+  const empName = document.getElementById('emp-name').value.trim() || 'Unknown';
+  const empId   = document.getElementById('emp-id').value.trim()   || 'N/A';
+  const rows = [
+    ['Field', 'Value'],
+    ['Employee Name', empName],
+    ['Employee ID', empId],
+    ['Model', document.getElementById('model-select').value],
+    ['Prediction', _lastResult.prediction],
+    ['Probability (%)', (_lastResult.probability * 100).toFixed(2)],
+    ['Risk Level', _lastResult.risk_level],
+    ['Generated At', new Date().toLocaleString()],
+    [],
+    ['Top SHAP Factors', ''],
+    ...(_lastResult.shap || []).map(s => [s.feature, s.shap.toFixed(5)]),
+    [],
+    ['Input Features', ''],
+    ...Object.entries(_lastPayload || {}).filter(([k]) => k !== 'model_name').map(([k,v]) => [k, v]),
+  ];
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a   = document.createElement('a');
+  a.href    = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `eaps_report_${empId.replace(/\s+/g,'_')}_${Date.now()}.csv`;
+  a.click();
+});
+</script>
+{% endblock %}

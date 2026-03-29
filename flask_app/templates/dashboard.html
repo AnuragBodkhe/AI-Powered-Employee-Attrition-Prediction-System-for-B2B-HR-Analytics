@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}📊 HR Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>📊 HR Attrition Analytics</h2>
+  <p>Explore attrition patterns from your dataset — department, salary, age, overtime, and more.</p>
+</div>
+
+<!-- KPI row (filled by JS) -->
+<div class="metric-row" id="kpi-row">
+  <div class="metric-card"><div class="card-title">Total Employees</div><div class="card-value" id="kpi-total">—</div></div>
+  <div class="metric-card"><div class="card-title">Attrition Count</div><div class="card-value" id="kpi-attrited" style="color:#ef4444">—</div></div>
+  <div class="metric-card"><div class="card-title">Attrition Rate</div><div class="card-value" id="kpi-rate">—</div></div>
+  <div class="metric-card"><div class="card-title">Avg Monthly Income</div><div class="card-value" id="kpi-income">—</div></div>
+  <div class="metric-card"><div class="card-title">Avg Age</div><div class="card-value" id="kpi-age">—</div></div>
+</div>
+
+<div class="alert alert-info hidden" id="dash-error"></div>
+
+<!-- Row 1 -->
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="chart-box"><h3>Attrition Rate by Department</h3><div id="chart-dept" style="height:280px"></div></div>
+  <div class="chart-box"><h3>Attrition Rate by Job Role</h3><div id="chart-role" style="height:280px"></div></div>
+</div>
+
+<!-- Row 2 -->
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="chart-box"><h3>Age Distribution by Attrition</h3><div id="chart-age" style="height:280px"></div></div>
+  <div class="chart-box"><h3>Monthly Income vs Attrition</h3><div id="chart-income" style="height:280px"></div></div>
+</div>
+
+<!-- Row 3 -->
+<div class="grid-2">
+  <div class="chart-box"><h3>Overtime vs Attrition</h3><div id="chart-ot" style="height:280px"></div></div>
+  <div class="chart-box" style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:280px">
+    <div style="font-size:3rem;margin-bottom:12px">📈</div>
+    <p style="color:var(--muted);text-align:center;max-width:260px;font-size:0.9rem">
+      Charts load automatically from your <code>data/</code> folder. Upload IBM HR or custom CSVs for live analytics.
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const layout = {
+  paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+  font: { color: '#e2e8f0', size: 11 },
+  margin: { t: 10, b: 40, l: 50, r: 20 },
+  xaxis: { gridcolor: 'rgba(255,255,255,0.07)', zeroline: false },
+  yaxis: { gridcolor: 'rgba(255,255,255,0.07)', zeroline: false },
+  legend: { bgcolor: 'transparent', font: { color: '#94a3b8' } },
+};
+const cfg = { responsive: true, displayModeBar: false };
+
+async function loadCharts() {
+  try {
+    const resp = await fetch('/api/chart-data');
+    const d    = await resp.json();
+    if (d.error) {
+      document.getElementById('dash-error').textContent = '⚠️ ' + d.error;
+      document.getElementById('dash-error').classList.remove('hidden');
+      return;
+    }
+
+    // KPIs
+    const k = d.kpis;
+    document.getElementById('kpi-total').textContent    = k.total.toLocaleString();
+    document.getElementById('kpi-attrited').textContent = k.attrited.toLocaleString();
+    document.getElementById('kpi-rate').textContent     = k.rate + '%';
+    document.getElementById('kpi-income').textContent   = '$' + k.avg_income.toLocaleString();
+    document.getElementById('kpi-age').textContent      = k.avg_age + ' yrs';
+
+    // Department bar
+    Plotly.newPlot('chart-dept', [{
+      type: 'bar', x: d.department.x, y: d.department.y,
+      marker: { color: d.department.y, colorscale: 'RdYlGn', reversescale: true, showscale: false },
+      text: d.department.y.map(v => v + '%'), textposition: 'outside',
+    }], { ...layout, yaxis: { ...layout.yaxis, title: 'Attrition Rate (%)' } }, cfg);
+
+    // JobRole horizontal bar
+    if (d.jobrole) {
+      Plotly.newPlot('chart-role', [{
+        type: 'bar', orientation: 'h',
+        y: d.jobrole.y, x: d.jobrole.x,
+        marker: { color: d.jobrole.x, colorscale: 'RdYlGn', reversescale: true, showscale: false },
+      }], { ...layout, margin: { ...layout.margin, l: 160 },
+            xaxis: { ...layout.xaxis, title: 'Attrition Rate (%)' } }, cfg);
+    }
+
+    // Age histogram
+    Plotly.newPlot('chart-age', [
+      { type: 'histogram', x: d.age.stay,  name: 'Stay',  nbinsx: 20,
+        marker: { color: '#4f46e5', opacity: 0.75 } },
+      { type: 'histogram', x: d.age.leave, name: 'Leave', nbinsx: 20,
+        marker: { color: '#ef4444', opacity: 0.75 } },
+    ], { ...layout, barmode: 'overlay',
+         xaxis: { ...layout.xaxis, title: 'Age' },
+         yaxis: { ...layout.yaxis, title: 'Count' } }, cfg);
+
+    // Income box
+    Plotly.newPlot('chart-income', [
+      { type: 'box', y: d.income.stay,  name: 'Stay',  marker: { color: '#4f46e5' }, boxpoints: 'outliers' },
+      { type: 'box', y: d.income.leave, name: 'Leave', marker: { color: '#ef4444' }, boxpoints: 'outliers' },
+    ], { ...layout, yaxis: { ...layout.yaxis, title: 'Monthly Income ($)' } }, cfg);
+
+    // Overtime bar
+    if (d.overtime) {
+      Plotly.newPlot('chart-ot', [
+        { type: 'bar', name: 'Stay',  x: d.overtime.labels, y: d.overtime.no,
+          marker: { color: '#4f46e5' } },
+        { type: 'bar', name: 'Leave', x: d.overtime.labels, y: d.overtime.yes,
+          marker: { color: '#ef4444' } },
+      ], { ...layout, barmode: 'group' }, cfg);
+    }
+
+  } catch (err) {
+    document.getElementById('dash-error').textContent = '❌ Failed to load chart data: ' + err.message;
+    document.getElementById('dash-error').classList.remove('hidden');
+  }
+}
+
+loadCharts();
+</script>
+{% endblock %}
