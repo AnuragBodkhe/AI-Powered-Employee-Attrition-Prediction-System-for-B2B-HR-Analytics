@@ -1,7 +1,6 @@
 # 📊 Employee Attrition Prediction System (EAPS)
 
-> **AI-Powered B2B HR Analytics** | MIT School of Computing  
-> *Anurag Bodkhe et al.*
+> **AI-Powered B2B HR Analytics** 
 
 [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask)](https://flask.palletsprojects.com)
