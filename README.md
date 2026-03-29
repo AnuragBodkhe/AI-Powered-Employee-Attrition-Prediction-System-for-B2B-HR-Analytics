@@ -156,7 +156,7 @@ docker run -p 5000:5000 eaps
 
 ---
 
-## 👨‍💻 Authors
+## 👨‍💻 Devloper
 
 - **Anurag Bodkhe** - Bodkheanurag235@gmail.com
 ---
