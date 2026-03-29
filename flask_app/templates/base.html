@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}EAPS{% endblock %} — Employee Attrition Prediction</title>
+  <meta name="description" content="AI-powered employee attrition prediction system for B2B HR analytics" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <!-- Plotly.js for charts -->
+  <script src="https://cdn.plot.ly/plotly-2.26.0.min.js" defer></script>
+</head>
+<body>
+
+<!-- ── Sidebar ─────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-badge">📊 EAPS</span>
+    <div class="logo-sub">Employee Attrition<br>Prediction System</div>
+  </div>
+
+  <div class="nav-label">Navigation</div>
+
+  <a href="{{ url_for('home') }}"        class="nav-link {% if request.endpoint == 'home'         %}active{% endif %}">
+    <span class="nav-icon">🏠</span> Home
+  </a>
+  <a href="{{ url_for('predict_page') }}" class="nav-link {% if request.endpoint == 'predict_page' %}active{% endif %}">
+    <span class="nav-icon">🎯</span> Predict
+  </a>
+  <a href="{{ url_for('batch_page') }}"   class="nav-link {% if request.endpoint == 'batch_page'   %}active{% endif %}">
+    <span class="nav-icon">📂</span> Batch
+  </a>
+  <a href="{{ url_for('dashboard_page') }}" class="nav-link {% if request.endpoint == 'dashboard_page' %}active{% endif %}">
+    <span class="nav-icon">📊</span> Dashboard
+  </a>
+  <a href="{{ url_for('compare_page') }}" class="nav-link {% if request.endpoint == 'compare_page' %}active{% endif %}">
+    <span class="nav-icon">🔬</span> Compare
+  </a>
+
+  <div class="sidebar-footer">
+    <strong style="color:var(--text)">MIT School of Computing</strong><br>
+    B2B HR Analytics · EAPS v2.0<br>
+    <span style="color:var(--primary2)">Anurag Bodkhe et al.</span>
+  </div>
+</aside>
+
+<!-- ── Main ───────────────────────────────────────────────────── -->
+<div class="main">
+  <div class="topbar">
+    <h1>{% block page_title %}EAPS{% endblock %}</h1>
+    <span class="topbar-sub">Flask · Python · scikit-learn · XGBoost</span>
+  </div>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
