@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}📊 HR Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
+  <div>
+    <h2>📊 HR Attrition Analytics</h2>
+    <p>Explore attrition patterns from your latest batch prediction — department, salary, age, overtime, and more.</p>
+  </div>
+  <button id="download-pdf-btn" class="btn btn-primary" style="white-space: nowrap;">📄 Download PDF Report</button>
+</div>
+
+<!-- KPI row (filled by JS) -->
+<div class="metric-row" id="kpi-row">
+  <div class="metric-card"><div class="card-title">Total Employees</div><div class="card-value" id="kpi-total">—</div></div>
+  <div class="metric-card"><div class="card-title">Attrition Count</div><div class="card-value" id="kpi-attrited" style="color:#ef4444">—</div></div>
+  <div class="metric-card"><div class="card-title">Attrition Rate</div><div class="card-value" id="kpi-rate">—</div></div>
+  <div class="metric-card"><div class="card-title">Avg Monthly Income</div><div class="card-value" id="kpi-income">—</div></div>
+  <div class="metric-card"><div class="card-title">Avg Age</div><div class="card-value" id="kpi-age">—</div></div>
+</div>
+
+<div class="alert alert-info hidden" id="dash-error"></div>
+
+<!-- Row 1 -->
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="chart-box"><h3>Attrition Rate by Department</h3><div id="chart-dept" style="height:280px"></div></div>
+  <div class="chart-box"><h3>Attrition Rate by Job Role</h3><div id="chart-role" style="height:280px"></div></div>
+</div>
+
+<!-- Row 2 -->
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="chart-box"><h3>Age Distribution by Attrition</h3><div id="chart-age" style="height:280px"></div></div>
+  <div class="chart-box"><h3>Monthly Income vs Attrition</h3><div id="chart-income" style="height:280px"></div></div>
+</div>
+
+<!-- Row 3 -->
+<div class="grid-2">
+  <div class="chart-box"><h3>Overtime vs Attrition</h3><div id="chart-ot" style="height:280px"></div></div>
+  <div class="chart-box" style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:280px">
+    <div style="font-size:3rem;margin-bottom:12px">📈</div>
+    <p style="color:var(--muted);text-align:center;max-width:260px;font-size:0.9rem">
+      These charts reflect the live predictions from your most recently processed <strong>Batch CSV</strong>.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 2 — Advanced Driver Analytics
+════════════════════════════════════════════════════════════════════════════ -->
+<div style="display:flex;align-items:center;gap:12px;margin:40px 0 20px">
+  <div style="width:4px;height:28px;background:linear-gradient(var(--primary),var(--danger));border-radius:4px"></div>
+  <h2 style="font-size:1.15rem;font-weight:700;margin:0">🔬 Advanced Driver Analytics</h2>
+</div>
+
+<!-- Row 4 -->
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="chart-box"><h3>🕸️ Stay vs Leave Profile (Avg Scores)</h3><div id="chart-radar" style="height:320px"></div></div>
+  <div class="chart-box"><h3>🏆 Top 5 Attrition Risk Segments</h3><div id="chart-leaderboard" style="height:320px"></div></div>
+</div>
+
+<!-- Row 5 -->
+<div class="grid-2" style="margin-bottom:20px">
+  <div class="chart-box"><h3>🌡️ Risk Heatmap: Dept vs Job Level</h3><div id="chart-heatmap" style="height:280px"></div></div>
+  <div class="chart-box"><h3>📈 Tenure Averages</h3><div id="chart-tenure" style="height:280px"></div></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+const layout = {
+  paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+  font: { color: '#e2e8f0', size: 11 },
+  margin: { t: 10, b: 40, l: 50, r: 20 },
+  xaxis: { gridcolor: 'rgba(255,255,255,0.07)', zeroline: false },
+  yaxis: { gridcolor: 'rgba(255,255,255,0.07)', zeroline: false },
+  legend: { bgcolor: 'transparent', font: { color: '#94a3b8' } },
+};
+const cfg = { responsive: true, displayModeBar: false };
+
+async function loadCharts() {
+  try {
+    const resp = await fetch('/api/chart-data');
+    const d    = await resp.json();
+    if (d.error) {
+      document.getElementById('dash-error').textContent = '⚠️ ' + d.error;
+      document.getElementById('dash-error').classList.remove('hidden');
+      return;
+    }
+
+    // KPIs
+    const k = d.kpis;
+    document.getElementById('kpi-total').textContent    = k.total.toLocaleString();
+    document.getElementById('kpi-attrited').textContent = k.attrited.toLocaleString();
+    document.getElementById('kpi-rate').textContent     = k.rate + '%';
+    document.getElementById('kpi-income').textContent   = k.avg_income ? '$' + k.avg_income.toLocaleString() : 'N/A';
+    document.getElementById('kpi-age').textContent      = k.avg_age ? k.avg_age + ' yrs' : 'N/A';
+
+    // 1. Department Stacked Bar Customization (Volume & Rate)
+    if (d.department) {
+      const deptTotals = d.department.stay.map((s,i) => s + d.department.leave[i]);
+      const deptPercents = d.department.leave.map((l,i) => deptTotals[i] > 0 ? (l / deptTotals[i] * 100).toFixed(1) + '%' : '0%');
+
+      Plotly.newPlot('chart-dept', [
+        { type: 'bar', name: 'Stay', x: d.department.labels, y: d.department.stay, marker: { color: '#4f46e5', line: {width: 0} } },
+        { type: 'bar', name: 'Leave', x: d.department.labels, y: d.department.leave, 
+          marker: { color: '#ef4444', line: {width: 0} }, 
+          text: deptPercents, textposition: 'outside', textfont: { color: '#ef4444', weight: 'bold' } }
+      ], { ...layout, barmode: 'stack', yaxis: { ...layout.yaxis, title: 'Total Employees' }, legend: { x: 0.01, y: 1.1, orientation: 'h' } }, cfg);
+    } else {
+      document.getElementById('chart-dept').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Department data not available</p>';
+    }
+
+    // 2. JobRole horizontal Stacked Bar
+    if (d.jobrole) {
+      const roleTotals = d.jobrole.stay.map((s,i) => s + d.jobrole.leave[i]);
+      const rolePercents = d.jobrole.leave.map((l,i) => roleTotals[i] > 0 ? (l / roleTotals[i] * 100).toFixed(1) + '%' : '0%');
+
+      Plotly.newPlot('chart-role', [
+        { type: 'bar', orientation: 'h', name: 'Stay', y: d.jobrole.labels, x: d.jobrole.stay, marker: { color: '#4f46e5' }, showlegend: false },
+        { type: 'bar', orientation: 'h', name: 'Leave', y: d.jobrole.labels, x: d.jobrole.leave, 
+          marker: { color: '#ef4444' }, showlegend: false,
+          text: rolePercents, textposition: 'outside', textfont: { color: '#ef4444' } }
+      ], { ...layout, barmode: 'stack', margin: { ...layout.margin, l: 150, r: 40 }, xaxis: { ...layout.xaxis, title: 'Total Employees' } }, cfg);
+    } else {
+      document.getElementById('chart-role').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Job Role data not available</p>';
+    }
+
+    // 3. Age Histogram (Smoothed density look)
+    if (d.age) {
+      Plotly.newPlot('chart-age', [
+        { type: 'histogram', x: d.age.stay,  name: 'Stay',  nbinsx: 25, opacity: 0.7, marker: { color: '#4f46e5', line: {color: '#4f46e5', width: 1} } },
+        { type: 'histogram', x: d.age.leave, name: 'Leave', nbinsx: 25, opacity: 0.7, marker: { color: '#ef4444', line: {color: '#ef4444', width: 1} } },
+      ], { ...layout, barmode: 'overlay', xaxis: { ...layout.xaxis, title: 'Age (Years)' }, yaxis: { ...layout.yaxis, title: 'Headcount' }, showlegend: false }, cfg);
+    } else {
+      document.getElementById('chart-age').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Age data not available</p>';
+    }
+
+    // 4. Income Violin Plot (Professional density view vs standard box)
+    if (d.income) {
+      Plotly.newPlot('chart-income', [
+        { type: 'violin', y: d.income.stay,  name: 'Stay',  marker: { color: '#4f46e5' }, box: { visible: true, width: 0.3 }, meanline: { visible: true } },
+        { type: 'violin', y: d.income.leave, name: 'Leave', marker: { color: '#ef4444' }, box: { visible: true, width: 0.3 }, meanline: { visible: true } },
+      ], { ...layout, yaxis: { ...layout.yaxis, title: 'Monthly Income ($)' }, showlegend: false }, cfg);
+    } else {
+      document.getElementById('chart-income').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Monthly Income data not available</p>';
+    }
+
+    // Overtime bar
+    if (d.overtime) {
+      Plotly.newPlot('chart-ot', [
+        { type: 'bar', name: 'Stay',  x: d.overtime.labels, y: d.overtime.no,
+          marker: { color: '#4f46e5' } },
+        { type: 'bar', name: 'Leave', x: d.overtime.labels, y: d.overtime.yes,
+          marker: { color: '#ef4444' } },
+      ], { ...layout, barmode: 'group' }, cfg);
+    } else {
+      document.getElementById('chart-ot').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Overtime data not available</p>';
+    }
+
+    // 5. Radar Chart (Satisfaction Profile)
+    if (d.radar) {
+      Plotly.newPlot('chart-radar', [
+        { type: 'scatterpolar', r: [...d.radar.stay, d.radar.stay[0]], theta: [...d.radar.metrics, d.radar.metrics[0]], fill: 'toself', name: 'Stay', line: { color: '#4f46e5' }, opacity: 0.7 },
+        { type: 'scatterpolar', r: [...d.radar.leave, d.radar.leave[0]], theta: [...d.radar.metrics, d.radar.metrics[0]], fill: 'toself', name: 'Leave', line: { color: '#ef4444' }, opacity: 0.7 }
+      ], {
+        ...layout, polar: { radialaxis: { visible: true, range: [0, 4.5], gridcolor: 'rgba(255,255,255,0.1)' }, angularaxis: { gridcolor: 'rgba(255,255,255,0.1)' } },
+        showlegend: true, legend: { x: 0, y: -0.2, orientation: 'h' }, margin: { t: 20, b: 40, l: 40, r: 40 }
+      }, cfg);
+    } else {
+      document.getElementById('chart-radar').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:120px;">Satisfaction survey data not available</p>';
+    }
+
+    // 6. Leaderboard (Top 5 Risk Segments)
+    if (d.leaderboard) {
+      Plotly.newPlot('chart-leaderboard', [{
+        type: 'bar', orientation: 'h', x: d.leaderboard.x, y: d.leaderboard.y,
+        marker: { color: '#ef4444' },
+        text: d.leaderboard.x.map(v => v.toFixed(1) + '%'), textposition: 'outside'
+      }], { ...layout, margin: { t: 10, b: 40, l: 180, r: 40 }, xaxis: { ...layout.xaxis, title: 'Avg Risk Probability (%)' } }, cfg);
+    } else {
+      document.getElementById('chart-leaderboard').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:120px;">Department/Role data not available</p>';
+    }
+
+    // 7. Heatmap (Dept vs Lvl)
+    if (d.heatmap) {
+      Plotly.newPlot('chart-heatmap', [{
+        type: 'heatmap', x: d.heatmap.x, y: d.heatmap.y, z: d.heatmap.z,
+        colorscale: [['0', '#0f172a'], ['0.5', '#4f46e5'], ['1', '#ef4444']],
+        text: d.heatmap.z.map(r => r.map(v => v.toFixed(1) + '%')),
+        texttemplate: '%{text}', textfont: { color: '#fff', size: 10 },
+        showscale: false
+      }], { ...layout, margin: { t: 10, b: 40, l: 150, r: 20 }, yaxis: { gridcolor: 'transparent' }, xaxis: { gridcolor: 'transparent' } }, cfg);
+    } else {
+      document.getElementById('chart-heatmap').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Department/Level data not available</p>';
+    }
+
+    // 8. Tenure Grouped Bar
+    if (d.tenure) {
+      Plotly.newPlot('chart-tenure', [
+        { type: 'bar', name: 'Stay', x: d.tenure.metrics, y: d.tenure.stay, marker: { color: '#4f46e5' } },
+        { type: 'bar', name: 'Leave', x: d.tenure.metrics, y: d.tenure.leave, marker: { color: '#ef4444' } }
+      ], { ...layout, barmode: 'group', yaxis: { ...layout.yaxis, title: 'Years' }, legend: { x: 0, y: 1.15, orientation: 'h' } }, cfg);
+    } else {
+      document.getElementById('chart-tenure').innerHTML = '<p style="color:var(--muted);text-align:center;padding-top:100px;">Tenure history data not available</p>';
+    }
+
+  } catch (err) {
+    document.getElementById('dash-error').textContent = '❌ Failed to load chart data: ' + err.message;
+    document.getElementById('dash-error').classList.remove('hidden');
+  }
+}
+
+    // Add PDF download logic
+    document.getElementById('download-pdf-btn').addEventListener('click', function() {
+        const btn = this;
+        const originalText = btn.innerHTML;
+        
+        // Hide button from the finalized PDF entirely
+        btn.style.opacity = '0';
+
+        const element = document.querySelector('.content');
+        
+        // Advanced PDF formatting for professional dark-mode reports
+        const opt = {
+          margin:       0.3,
+          filename:     `EAPS_Dashboard_Report_${Date.now()}.pdf`,
+          image:        { type: 'jpeg', quality: 1.0 },
+          html2canvas:  { scale: 2, logging: false, backgroundColor: '#0f1117' },
+          jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' },
+          pagebreak:    { mode: ['css', 'avoid'], avoid: '.chart-box, .metric-row, .page-header' }
+        };
+        
+        html2pdf().set(opt).from(element).save().then(() => {
+            btn.style.opacity = '1';
+        }).catch(err => {
+            console.error("PDF generation failed", err);
+            btn.style.opacity = '1';
+            alert("Failed to generate PDF. Make sure batch data is loaded correctly.");
+        });
+    });
+
+loadCharts();
+</script>
+{% endblock %}
