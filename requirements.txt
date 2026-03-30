@@ -20,6 +20,8 @@ seaborn>=0.12.0
 plotly>=5.15.0
 
 # Web app
+Flask>=3.0.0
+gunicorn>=21.2.0
 streamlit>=1.28.0
 
 # Utilities
