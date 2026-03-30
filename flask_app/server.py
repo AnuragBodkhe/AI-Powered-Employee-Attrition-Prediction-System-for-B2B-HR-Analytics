@@ -20,6 +20,7 @@ sys.path.insert(0, PROJECT_ROOT)
 from flask import Flask, render_template, jsonify, request, send_file
 import pandas as pd
 import io
+import traceback
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 app = Flask(__name__,
@@ -27,6 +28,18 @@ app = Flask(__name__,
             static_folder='static')
 
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB upload limit
+
+# ── CORS: allow same-origin API calls from browser ────────────────────────────
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    return response
+
+@app.route('/api/<path:path>', methods=['OPTIONS'])
+def options_handler(path):
+    return '', 204
 
 # ── Helper: check if models exist ─────────────────────────────────────────────
 def get_models_status():
@@ -73,7 +86,9 @@ def compare_page():
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
     try:
-        data       = request.get_json()
+        data = request.get_json(force=True, silent=True)
+        if not data:
+            return jsonify({'error': 'Invalid or empty JSON payload received.'}), 400
         model_name = data.pop('model_name', 'Random Forest')
 
         from utils.model_loader  import predict_single, load_feature_names
@@ -495,10 +510,42 @@ def api_model_diagnostics():
 
 # ── Run ───────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
+    import sys
+
     print("=" * 55)
     print("  EAPS Flask App — Employee Attrition Prediction")
     print("  [Debiased Version — Optimal Thresholds Active]")
-    print("  http://localhost:5000")
     print("=" * 55)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    # ── Startup validation ────────────────────────────────────────────────────
+    model_dir = os.path.join(PROJECT_ROOT, 'models')
+    required  = ['random_forest.pkl', 'xgboost.pkl',
+                 'logistic_regression.pkl', 'svm.pkl', 'scaler.pkl']
+    missing   = [f for f in required if not os.path.exists(os.path.join(model_dir, f))]
+
+    if missing:
+        print("\n⚠️  WARNING: The following model files are missing:")
+        for f in missing:
+            print(f"   ✗ models/{f}")
+        print("\n   Run eaps_ml_pipeline.py first to train the models.")
+        print("   The server will still start but predictions will fail.\n")
+    else:
+        print(f"\n  ✓ All {len(required)} model files found.")
+
+    # Check utils importability
+    try:
+        from utils.preprocess   import encode_input
+        from utils.model_loader import predict_single
+        print("  ✓ Utils imported successfully.")
+    except Exception as e:
+        print(f"\n  ✗ CRITICAL: Could not import utils — {e}")
+        print("    Fix this error before predictions will work.\n")
+        traceback.print_exc()
+
+    print(f"\n  Listening on: http://localhost:5000")
+    print("=" * 55 + "\n")
+    sys.stdout.flush()
+
+    # use_reloader=False prevents Windows double-process issues
+    app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
 
