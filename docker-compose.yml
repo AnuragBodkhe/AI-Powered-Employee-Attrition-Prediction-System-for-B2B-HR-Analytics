@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  eaps-web:
+    build: .
+    container_name: eaps_flask_app
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount directories to allow saving/loading models & data outside the container
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./results:/app/results
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
