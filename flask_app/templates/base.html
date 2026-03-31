@@ -9,6 +9,16 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <!-- Plotly.js for charts -->
   <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+  <!-- Theme early check to prevent flicker -->
+  <script>
+    const savedTheme = localStorage.getItem('eaps_theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      // Default to dark
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
 </head>
 <body>
 
@@ -49,6 +59,10 @@
   <div class="topbar">
     <h1>{% block page_title %}EAPS{% endblock %}</h1>
     <span class="topbar-sub">Flask · Python · scikit-learn · XGBoost</span>
+    
+    <button id="theme-toggle" class="btn btn-outline btn-sm" style="margin-left: auto; border-radius: 50%; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border: 1px solid var(--border); background: var(--bg2); color: var(--text); cursor: pointer; transition: all 0.2s;" title="Toggle Theme">
+      <span id="theme-icon">🌙</span>
+    </button>
   </div>
 
   <div class="content">
