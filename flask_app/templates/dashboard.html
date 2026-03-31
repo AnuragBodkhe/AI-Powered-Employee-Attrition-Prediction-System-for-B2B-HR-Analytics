@@ -71,11 +71,11 @@
 <script>
 const layout = {
   paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
-  font: { color: '#e2e8f0', size: 11 },
+  font: { color: 'var(--text)', size: 11 },
   margin: { t: 10, b: 40, l: 50, r: 20 },
-  xaxis: { gridcolor: 'rgba(255,255,255,0.07)', zeroline: false },
-  yaxis: { gridcolor: 'rgba(255,255,255,0.07)', zeroline: false },
-  legend: { bgcolor: 'transparent', font: { color: '#94a3b8' } },
+  xaxis: { gridcolor: 'var(--border)', zeroline: false },
+  yaxis: { gridcolor: 'var(--border)', zeroline: false },
+  legend: { bgcolor: 'transparent', font: { color: 'var(--muted)' } },
 };
 const cfg = { responsive: true, displayModeBar: false };
 
@@ -165,7 +165,7 @@ async function loadCharts() {
         { type: 'scatterpolar', r: [...d.radar.stay, d.radar.stay[0]], theta: [...d.radar.metrics, d.radar.metrics[0]], fill: 'toself', name: 'Stay', line: { color: '#4f46e5' }, opacity: 0.7 },
         { type: 'scatterpolar', r: [...d.radar.leave, d.radar.leave[0]], theta: [...d.radar.metrics, d.radar.metrics[0]], fill: 'toself', name: 'Leave', line: { color: '#ef4444' }, opacity: 0.7 }
       ], {
-        ...layout, polar: { radialaxis: { visible: true, range: [0, 4.5], gridcolor: 'rgba(255,255,255,0.1)' }, angularaxis: { gridcolor: 'rgba(255,255,255,0.1)' } },
+        ...layout, polar: { radialaxis: { visible: true, range: [0, 4.5], gridcolor: 'var(--border)' }, angularaxis: { gridcolor: 'var(--border)' } },
         showlegend: true, legend: { x: 0, y: -0.2, orientation: 'h' }, margin: { t: 20, b: 40, l: 40, r: 40 }
       }, cfg);
     } else {
