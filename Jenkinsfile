@@ -4,7 +4,6 @@ pipeline {
     environment {
         IMAGE_NAME = 'eaps-flask-app'
         IMAGE_TAG  = "${env.BUILD_NUMBER}"
-        CONTAINER_NAME = 'eaps_flask_app'
     }
 
     stages {
@@ -18,10 +17,13 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 bat '''
+                    where python || exit 1
+
                     python -m venv venv
                     call venv\\Scripts\\activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
+
+                    python -m pip install --upgrade pip
+                    python -m pip install -r requirements.txt
                 '''
             }
         }
@@ -30,22 +32,25 @@ pipeline {
             steps {
                 bat '''
                     call venv\\Scripts\\activate
-                    python -m pytest test_predict.py -v || exit 0
+                    python -m pytest test_predict.py -v
                 '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                bat '''
+                    docker --version || exit 1
+                    docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
+                '''
             }
         }
 
-        stage('Deploy with Docker Compose') {
+        stage('Deploy') {
             steps {
                 bat '''
-                    docker-compose down
-                    docker-compose up -d --build
+                    docker compose down
+                    docker compose up -d --build
                 '''
             }
         }
@@ -53,7 +58,6 @@ pipeline {
         stage('Health Check') {
             steps {
                 bat '''
-                    echo Waiting for the application to start...
                     timeout /t 15
                     curl http://localhost:5000/ || exit 1
                 '''
@@ -62,13 +66,6 @@ pipeline {
     }
 
     post {
-        success {
-            echo "Pipeline completed successfully. EAPS app is running on port 5000."
-        }
-        failure {
-            echo "Pipeline failed. Check the logs above for details."
-            bat 'docker-compose down'
-        }
         always {
             bat 'docker system prune -f'
         }
