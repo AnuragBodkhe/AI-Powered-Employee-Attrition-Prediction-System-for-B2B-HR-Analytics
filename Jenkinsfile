@@ -2,105 +2,70 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "attrition-prediction-app"
-        CONTAINER_NAME = "attrition-container"
-        PORT = "5000"
-    }
-
-    tools {
-        // If configured in Jenkins
-        python 'Python3'
+        IMAGE_NAME = 'eaps-flask-app'
+        IMAGE_TAG  = "${env.BUILD_NUMBER}"
+        PYTHON = "C:\\Users\\Anurag\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"
     }
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                echo "Cloning GitHub Repository..."
-                git branch: 'main', url: 'https://github.com/AnuragBodkhe/AI-Powered-Employee-Attrition-Prediction-System-for-B2B-HR-Analytics.git'
+                checkout scm
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Install Dependencies') {
             steps {
-                echo "Setting up Python virtual environment..."
-                sh '''
-                python -m venv venv
-                . venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                bat '''
+                    "%PYTHON%" -m venv venv
+                    call venv\\Scripts\\activate
+
+                    "%PYTHON%" -m pip install --upgrade pip
+                    "%PYTHON%" -m pip install -r requirements.txt
                 '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo "Running Tests..."
-                sh '''
-                . venv/bin/activate
-                pytest || echo "No tests found, skipping..."
-                '''
-            }
-        }
-
-        stage('Lint Code (Optional)') {
-            steps {
-                echo "Checking code quality..."
-                sh '''
-                . venv/bin/activate
-                flake8 . || echo "Lint warnings ignored"
+                bat '''
+                    call venv\\Scripts\\activate
+                    "%PYTHON%" -m pytest test_predict.py -v
                 '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker Image..."
-                sh '''
-                docker build -t $IMAGE_NAME .
+                bat '''
+                    docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
                 '''
             }
         }
 
-        stage('Stop Existing Container') {
+        stage('Deploy') {
             steps {
-                echo "Stopping old container if exists..."
-                sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
-                '''
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                echo "Running new container..."
-                sh '''
-                docker run -d -p $PORT:$PORT --name $CONTAINER_NAME $IMAGE_NAME
+                bat '''
+                    docker compose down
+                    docker compose up -d --build
                 '''
             }
         }
 
         stage('Health Check') {
             steps {
-                echo "Checking if app is running..."
-                sh '''
-                sleep 10
-                curl http://localhost:$PORT || echo "App not responding"
+                bat '''
+                    timeout /t 15
+                    curl http://localhost:5000/ || exit 1
                 '''
             }
         }
     }
 
     post {
-        success {
-            echo "✅ Pipeline executed successfully!"
-        }
-        failure {
-            echo "❌ Pipeline failed!"
-        }
         always {
-            echo "🔁 Pipeline finished."
+            bat 'docker system prune -f || echo Docker not running'
         }
     }
 }
