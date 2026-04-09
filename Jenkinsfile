@@ -3,14 +3,13 @@ pipeline {
 
     environment {
         VENV_DIR = "venv"
-        REPO_URL = "https://github.com/AnuragBodkhe/AI-Powered-Employee-Attrition-Prediction-System-for-B2B-HR-Analytics.git"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: "${REPO_URL}"
+                git branch: 'main', url: 'https://github.com/AnuragBodkhe/AI-Powered-Employee-Attrition-Prediction-System-for-B2B-HR-Analytics.git'
             }
         }
 
@@ -24,7 +23,7 @@ pipeline {
                     if [ -f requirements.txt ]; then
                         pip install -r requirements.txt
                     else
-                        pip install pandas numpy scikit-learn
+                        pip install pandas numpy scikit-learn flask
                     fi
                 '''
             }
@@ -34,7 +33,26 @@ pipeline {
             steps {
                 sh '''
                     . ${VENV_DIR}/bin/activate
-                    python main.py || echo "No main.py found"
+                    echo "Running ML Model..."
+                    python main.py || echo "main.py not found"
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    if [ ! -f Dockerfile ]; then
+                        cat <<EOF > Dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt || true
+CMD ["python", "main.py"]
+EOF
+                    fi
+
+                    docker build -t employee-attrition-ml:latest .
                 '''
             }
         }
@@ -56,7 +74,6 @@ pipeline {
                 echo "✅ Build Successful at ${time}"
             }
         }
-
         failure {
             echo "❌ Build Failed"
         }
