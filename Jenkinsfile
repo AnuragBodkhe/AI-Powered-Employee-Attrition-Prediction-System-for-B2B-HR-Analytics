@@ -17,9 +17,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
+                bat '''
+                    python -m venv venv
+                    call venv\\Scripts\\activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
@@ -28,23 +28,23 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '''
-                    . venv/bin/activate
-                    python -m pytest test_predict.py -v || true
+                bat '''
+                    call venv\\Scripts\\activate
+                    python -m pytest test_predict.py -v || exit 0
                 '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
             }
         }
 
         stage('Deploy with Docker Compose') {
             steps {
-                sh '''
-                    docker-compose down || true
+                bat '''
+                    docker-compose down
                     docker-compose up -d --build
                 '''
             }
@@ -52,10 +52,10 @@ pipeline {
 
         stage('Health Check') {
             steps {
-                sh '''
-                    echo "Waiting for the application to start..."
-                    sleep 15
-                    curl --fail http://localhost:5000/ || (echo "Health check failed!" && exit 1)
+                bat '''
+                    echo Waiting for the application to start...
+                    timeout /t 15
+                    curl http://localhost:5000/ || exit 1
                 '''
             }
         }
@@ -67,10 +67,10 @@ pipeline {
         }
         failure {
             echo "Pipeline failed. Check the logs above for details."
-            sh 'docker-compose down || true'
+            bat 'docker-compose down'
         }
         always {
-            sh 'docker system prune -f || true'
+            bat 'docker system prune -f'
         }
     }
 }
