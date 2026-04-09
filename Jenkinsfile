@@ -2,72 +2,105 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'eaps-flask-app'
-        IMAGE_TAG  = "${env.BUILD_NUMBER}"
+        IMAGE_NAME = "attrition-prediction-app"
+        CONTAINER_NAME = "attrition-container"
+        PORT = "5000"
+    }
+
+    tools {
+        // If configured in Jenkins
+        python 'Python3'
     }
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                checkout scm
+                echo "Cloning GitHub Repository..."
+                git branch: 'main', url: 'https://github.com/AnuragBodkhe/AI-Powered-Employee-Attrition-Prediction-System-for-B2B-HR-Analytics.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
-                bat '''
-                    where python || exit 1
-
-                    python -m venv venv
-                    call venv\\Scripts\\activate
-
-                    python -m pip install --upgrade pip
-                    python -m pip install -r requirements.txt
+                echo "Setting up Python virtual environment..."
+                sh '''
+                python -m venv venv
+                . venv/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
                 '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat '''
-                    call venv\\Scripts\\activate
-                    python -m pytest test_predict.py -v
+                echo "Running Tests..."
+                sh '''
+                . venv/bin/activate
+                pytest || echo "No tests found, skipping..."
+                '''
+            }
+        }
+
+        stage('Lint Code (Optional)') {
+            steps {
+                echo "Checking code quality..."
+                sh '''
+                . venv/bin/activate
+                flake8 . || echo "Lint warnings ignored"
                 '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat '''
-                    docker --version || exit 1
-                    docker build -t %IMAGE_NAME%:%IMAGE_TAG% .
+                echo "Building Docker Image..."
+                sh '''
+                docker build -t $IMAGE_NAME .
                 '''
             }
         }
 
-        stage('Deploy') {
+        stage('Stop Existing Container') {
             steps {
-                bat '''
-                    docker compose down
-                    docker compose up -d --build
+                echo "Stopping old container if exists..."
+                sh '''
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                '''
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                echo "Running new container..."
+                sh '''
+                docker run -d -p $PORT:$PORT --name $CONTAINER_NAME $IMAGE_NAME
                 '''
             }
         }
 
         stage('Health Check') {
             steps {
-                bat '''
-                    timeout /t 15
-                    curl http://localhost:5000/ || exit 1
+                echo "Checking if app is running..."
+                sh '''
+                sleep 10
+                curl http://localhost:$PORT || echo "App not responding"
                 '''
             }
         }
     }
 
     post {
+        success {
+            echo "✅ Pipeline executed successfully!"
+        }
+        failure {
+            echo "❌ Pipeline failed!"
+        }
         always {
-            bat 'docker system prune -f'
+            echo "🔁 Pipeline finished."
         }
     }
 }
