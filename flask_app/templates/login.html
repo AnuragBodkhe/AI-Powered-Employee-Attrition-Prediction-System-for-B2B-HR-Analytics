@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — EAPS HR Analytics</title>
+  <meta name="description" content="Login to Employee Attrition Prediction System" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script>
+    const t = localStorage.getItem('eaps_theme');
+    document.documentElement.setAttribute('data-theme', t || 'dark');
+  </script>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--bg);
+      padding: 24px;
+    }
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .login-header .logo-badge {
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color: white;
+      font-size: 1.6rem;
+      font-weight: 800;
+      padding: 12px 22px;
+      border-radius: 14px;
+      display: inline-block;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .login-header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .login-header p {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .login-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      box-shadow: var(--shadow);
+    }
+    .login-card .form-group {
+      margin-bottom: 20px;
+    }
+    .login-card label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-sizing: border-box;
+    }
+    .login-card input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.18);
+    }
+    .login-card .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 18px rgba(79,70,229,0.35);
+    }
+    .login-card .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(79,70,229,0.5);
+    }
+    .login-card .btn-login:active { transform: translateY(0); }
+    .error-msg {
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #f87171;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .login-hint {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: rgba(79,70,229,0.08);
+      border: 1px solid rgba(79,70,229,0.2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .login-hint strong { color: var(--primary2); }
+    .theme-btn-wrap {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="theme-btn-wrap">
+  <button id="theme-toggle" class="btn btn-outline btn-sm"
+          style="border-radius:50%;width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border);background:var(--bg2);color:var(--text);cursor:pointer;transition:all 0.2s"
+          title="Toggle Theme">
+    <span id="theme-icon"></span>
+  </button>
+</div>
+
+<div class="login-wrap">
+  <!-- Header -->
+  <div class="login-header">
+    <div class="logo-badge">EAPS</div>
+    <h1>HR Analytics Platform</h1>
+    <p>Employee Attrition Prediction System</p>
+  </div>
+
+  <!-- Card -->
+  <div class="login-card">
+    <h2 style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:24px">Sign In</h2>
+
+    {% if error %}
+    <div class="error-msg">
+      <span>&#9888;</span> {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('login') }}" id="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"
+               placeholder="Enter username"
+               value="{{ request.form.get('username', '') }}"
+               autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Enter password"
+               autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn-login">Sign In</button>
+    </form>
+
+    <div class="login-hint">
+      Demo credentials &nbsp;|&nbsp;
+      Username: <strong>admin</strong> &nbsp;·&nbsp;
+      Password: <strong>admin123</strong>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Theme toggle
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('theme-icon').textContent = t === 'dark' ? '☀' : '☾';
+  }
+  applyTheme(localStorage.getItem('eaps_theme') || 'dark');
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('eaps_theme', next);
+    applyTheme(next);
+  });
+</script>
+</body>
+</html>

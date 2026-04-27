@@ -1,0 +1,101 @@
+EmployeeNumber,Age,Gender,MaritalStatus,Department,JobRole,JobLevel,MonthlyIncome,HourlyRate,MonthlyRate,PercentSalaryHike,StockOptionLevel,OverTime,BusinessTravel,JobSatisfaction,JobInvolvement,EnvironmentSatisfaction,WorkLifeBalance,RelationshipSatisfaction,PerformanceRating,TrainingTimesLastYear,DistanceFromHome,NumCompaniesWorked,YearsAtCompany,YearsInCurrentRole,YearsSinceLastPromotion,TotalWorkingYears,Profile,Probability,Prediction,Risk_Level
+1001,22,Female,Single,Human Resources,Human Resources,1,1957,34,2839,13,0,Yes,Travel_Frequently,1,2,1,1,1,3,0,15,9,0,1,7,4,HighRisk,0.6317,Leave,HIGH
+1002,34,Male,Single,Human Resources,Manager,1,2929,43,4787,12,0,Yes,Travel_Frequently,1,1,2,1,1,4,0,26,7,2,1,4,4,HighRisk,0.6327,Leave,HIGH
+1003,28,Male,Single,Human Resources,Human Resources,2,3198,50,7066,12,0,Yes,Travel_Frequently,1,1,1,1,2,3,0,18,8,1,1,9,2,HighRisk,0.6315,Leave,HIGH
+1004,25,Female,Single,Research & Development,Manufacturing Director,1,2747,50,3401,13,0,Yes,Travel_Frequently,1,1,2,2,2,3,2,25,5,0,0,9,4,HighRisk,0.6322,Leave,HIGH
+1005,25,Female,Single,Research & Development,Research Scientist,1,2842,45,5241,13,0,Yes,Travel_Frequently,2,1,2,1,1,4,2,28,9,1,1,7,2,HighRisk,0.6303,Leave,HIGH
+1006,23,Male,Single,Human Resources,Manager,1,1813,50,3310,13,0,Yes,Travel_Frequently,2,1,2,2,2,4,2,15,5,2,1,9,1,HighRisk,0.6235,Leave,HIGH
+1007,24,Female,Single,Research & Development,Healthcare Representative,1,3453,53,7895,12,0,Yes,Travel_Frequently,1,1,2,1,1,4,0,15,9,1,1,4,1,HighRisk,0.6321,Leave,HIGH
+1008,25,Male,Single,Research & Development,Manufacturing Director,1,3298,48,2645,11,0,Yes,Travel_Frequently,2,1,1,1,2,3,1,28,6,2,0,8,4,HighRisk,0.6326,Leave,HIGH
+1009,29,Female,Single,Human Resources,Manager,1,2007,37,2524,12,0,Yes,Travel_Frequently,1,1,1,1,1,3,0,17,5,1,0,12,2,HighRisk,0.6324,Leave,HIGH
+1010,25,Male,Single,Research & Development,Healthcare Representative,2,1997,55,5874,12,0,Yes,Travel_Frequently,1,1,1,2,2,4,1,29,5,2,0,4,4,HighRisk,0.6285,Leave,HIGH
+1011,34,Male,Single,Human Resources,Manager,1,1892,36,6393,12,0,Yes,Travel_Frequently,1,2,1,2,2,3,0,29,9,0,0,12,1,HighRisk,0.6313,Leave,HIGH
+1012,24,Female,Single,Sales,Sales Executive,2,2485,36,5285,11,0,Yes,Travel_Frequently,1,2,1,2,2,4,1,28,9,2,1,6,2,HighRisk,0.6217,Leave,HIGH
+1013,22,Male,Single,Research & Development,Laboratory Technician,2,1617,31,6785,12,0,Yes,Travel_Frequently,1,1,1,1,1,3,2,22,8,0,0,4,5,HighRisk,0.6309,Leave,HIGH
+1014,32,Female,Single,Sales,Sales Representative,2,1918,51,7867,12,0,Yes,Travel_Frequently,1,2,2,1,2,4,1,17,5,1,0,5,5,HighRisk,0.6304,Leave,HIGH
+1015,26,Male,Single,Sales,Manager,2,3304,32,4001,12,0,Yes,Travel_Frequently,2,1,2,2,1,4,2,18,6,1,0,5,5,HighRisk,0.6247,Leave,HIGH
+1016,26,Male,Single,Sales,Sales Representative,2,1916,51,7195,12,0,Yes,Travel_Frequently,2,2,1,1,2,4,0,15,7,0,1,6,4,HighRisk,0.6308,Leave,HIGH
+1017,30,Male,Single,Human Resources,Manager,1,1654,52,3221,13,0,Yes,Travel_Frequently,1,2,1,2,1,3,1,26,5,1,0,7,1,HighRisk,0.6325,Leave,HIGH
+1018,35,Female,Single,Research & Development,Research Director,1,3395,37,3331,11,0,Yes,Travel_Frequently,2,1,1,2,2,3,1,20,5,1,0,11,2,HighRisk,0.6302,Leave,HIGH
+1019,27,Female,Single,Sales,Sales Representative,1,1956,30,7406,11,0,Yes,Travel_Frequently,2,2,2,1,2,4,2,27,9,1,0,5,3,HighRisk,0.6305,Leave,HIGH
+1020,26,Male,Single,Sales,Manager,1,2721,43,4831,13,0,Yes,Travel_Frequently,2,2,1,2,1,4,0,28,5,2,0,9,4,HighRisk,0.6322,Leave,HIGH
+1021,40,Female,Divorced,Sales,Manager,2,15792,69,24617,17,3,No,Travel_Rarely,4,3,4,2,2,4,5,11,1,22,10,2,17,LowRisk,0.0979,Stay,LOW
+1022,39,Female,Single,Human Resources,Human Resources,5,16873,87,18559,20,3,Yes,Travel_Frequently,2,4,3,4,2,3,4,9,4,13,2,1,26,LowRisk,0.0973,Stay,LOW
+1023,55,Male,Single,Research & Development,Laboratory Technician,2,4757,65,23569,22,0,Yes,Travel_Rarely,4,4,2,4,4,4,5,7,1,7,11,5,5,LowRisk,0.1119,Stay,LOW
+1024,37,Male,Divorced,Sales,Sales Representative,5,4822,85,16165,14,3,No,Travel_Rarely,4,4,4,4,3,4,6,14,4,16,9,3,33,LowRisk,0.1035,Stay,LOW
+1025,57,Female,Married,Sales,Manager,4,16317,65,17086,25,3,No,Travel_Rarely,3,2,4,3,2,4,4,6,4,5,3,1,12,LowRisk,0.0971,Stay,LOW
+1026,52,Male,Single,Research & Development,Laboratory Technician,5,10678,71,25780,20,3,No,Non-Travel,3,3,4,4,2,4,5,1,2,12,7,3,22,LowRisk,0.096,Stay,LOW
+1027,45,Male,Married,Human Resources,Human Resources,5,11956,51,20742,18,3,No,Travel_Rarely,2,4,4,2,3,3,2,11,3,7,8,1,6,LowRisk,0.0976,Stay,LOW
+1028,40,Male,Married,Research & Development,Healthcare Representative,4,9529,98,20423,17,3,No,Non-Travel,3,2,4,4,2,4,3,11,0,27,11,0,29,LowRisk,0.0964,Stay,LOW
+1029,36,Male,Divorced,Sales,Sales Executive,3,7908,58,23517,23,0,No,Travel_Rarely,4,3,3,2,4,3,3,5,0,21,1,2,23,LowRisk,0.1132,Stay,LOW
+1030,42,Male,Single,Human Resources,Manager,3,5669,94,17882,23,0,No,Travel_Rarely,4,3,4,3,2,4,2,14,3,29,8,0,18,LowRisk,0.0975,Stay,LOW
+1031,52,Male,Married,Research & Development,Healthcare Representative,3,16022,83,16850,22,3,Yes,Travel_Rarely,4,4,3,3,2,3,4,15,3,10,8,4,24,LowRisk,0.0964,Stay,LOW
+1032,40,Male,Married,Human Resources,Manager,4,6979,81,14950,18,2,No,Travel_Rarely,4,4,3,4,2,3,2,4,3,18,9,1,27,LowRisk,0.0967,Stay,LOW
+1033,44,Male,Single,Research & Development,Healthcare Representative,4,7630,75,15972,17,2,Yes,Travel_Frequently,4,3,3,4,4,4,4,12,3,11,5,2,12,LowRisk,0.0972,Stay,LOW
+1034,36,Female,Single,Sales,Manager,3,7138,63,23866,17,2,No,Non-Travel,3,2,3,2,3,3,6,3,2,4,1,4,14,LowRisk,0.0995,Stay,LOW
+1035,50,Female,Single,Human Resources,Human Resources,2,13405,68,23381,20,3,No,Non-Travel,2,3,3,2,2,4,5,2,4,23,11,0,9,LowRisk,0.0961,Stay,LOW
+1036,39,Male,Single,Sales,Manager,2,13143,98,21637,22,1,Yes,Travel_Rarely,3,3,4,3,3,3,6,12,0,27,4,5,11,LowRisk,0.1048,Stay,LOW
+1037,35,Male,Single,Research & Development,Research Scientist,2,6564,50,21386,20,3,No,Non-Travel,2,3,4,3,4,4,2,11,1,11,11,4,26,LowRisk,0.0962,Stay,LOW
+1038,33,Male,Divorced,Sales,Sales Representative,3,8352,59,10339,13,1,No,Travel_Frequently,4,4,3,3,2,4,4,12,3,11,9,4,20,LowRisk,0.0982,Stay,LOW
+1039,49,Male,Married,Research & Development,Research Scientist,4,13891,66,8847,14,1,No,Travel_Frequently,3,4,2,2,3,4,4,3,4,16,11,3,7,LowRisk,0.0963,Stay,LOW
+1040,43,Female,Married,Research & Development,Manufacturing Director,2,6634,71,21488,24,3,No,Travel_Frequently,3,4,2,3,2,4,4,6,0,27,7,4,31,LowRisk,0.0958,Stay,LOW
+1041,57,Female,Married,Sales,Manager,2,7073,83,19854,22,3,Yes,Non-Travel,2,3,4,2,3,4,5,2,0,23,10,1,27,LowRisk,0.0963,Stay,LOW
+1042,47,Male,Divorced,Sales,Sales Representative,5,5527,64,11717,20,0,No,Travel_Rarely,4,3,4,4,3,4,5,8,1,17,9,1,17,LowRisk,0.1005,Stay,LOW
+1043,46,Male,Single,Sales,Manager,4,16659,100,21596,18,2,No,Travel_Rarely,4,3,4,4,4,4,3,8,4,18,6,2,22,LowRisk,0.0975,Stay,LOW
+1044,44,Female,Single,Human Resources,Manager,3,13368,74,15653,25,3,No,Travel_Rarely,4,3,4,3,3,3,5,1,1,19,10,2,32,LowRisk,0.0958,Stay,LOW
+1045,33,Female,Single,Sales,Sales Representative,3,10717,91,13058,14,3,No,Travel_Rarely,4,4,3,4,2,4,6,7,2,23,12,3,32,LowRisk,0.0973,Stay,LOW
+1046,49,Male,Single,Human Resources,Human Resources,4,7727,97,10961,19,0,No,Travel_Rarely,2,4,3,2,2,4,2,5,2,14,7,1,12,LowRisk,0.0993,Stay,LOW
+1047,48,Male,Single,Human Resources,Manager,3,5293,89,20535,22,1,Yes,Travel_Frequently,2,2,3,4,3,4,4,11,0,28,8,2,26,LowRisk,0.0987,Stay,LOW
+1048,32,Female,Married,Human Resources,Human Resources,4,14468,77,16195,20,2,No,Travel_Rarely,3,2,2,3,4,4,6,5,2,3,11,3,13,LowRisk,0.0967,Stay,LOW
+1049,57,Male,Divorced,Sales,Manager,5,17645,68,15540,22,2,No,Travel_Frequently,2,4,3,4,4,3,2,15,0,12,8,0,23,LowRisk,0.099,Stay,LOW
+1050,32,Female,Married,Research & Development,Laboratory Technician,5,6877,62,12330,25,2,No,Non-Travel,3,3,3,4,3,3,5,2,1,27,4,5,28,LowRisk,0.0963,Stay,LOW
+1051,57,Female,Single,Human Resources,Manager,5,4228,66,25582,14,3,No,Travel_Frequently,4,4,3,4,3,4,2,11,1,18,1,4,33,LowRisk,0.0994,Stay,LOW
+1052,49,Male,Divorced,Human Resources,Manager,2,14410,79,17902,23,3,No,Non-Travel,2,2,3,3,2,3,3,15,4,7,7,3,16,LowRisk,0.096,Stay,LOW
+1053,48,Male,Married,Human Resources,Manager,2,17659,81,21373,17,0,No,Non-Travel,3,3,2,3,2,4,6,15,2,4,7,2,11,LowRisk,0.096,Stay,LOW
+1054,32,Male,Divorced,Sales,Sales Representative,2,4828,100,18928,16,1,No,Non-Travel,4,2,4,2,2,4,3,13,4,3,5,1,9,LowRisk,0.1076,Stay,LOW
+1055,55,Male,Single,Human Resources,Manager,2,6159,50,19738,25,1,No,Non-Travel,2,3,2,2,4,4,6,2,0,18,8,2,21,LowRisk,0.0962,Stay,LOW
+1056,44,Male,Divorced,Human Resources,Human Resources,2,15915,100,25086,17,3,No,Non-Travel,3,3,3,4,2,4,5,2,0,13,10,1,7,LowRisk,0.0962,Stay,LOW
+1057,49,Female,Married,Sales,Sales Representative,4,11433,82,22096,14,0,No,Travel_Rarely,3,2,3,3,3,4,5,12,0,13,7,2,26,LowRisk,0.0985,Stay,LOW
+1058,34,Female,Single,Research & Development,Manufacturing Director,2,17627,55,11054,19,0,No,Non-Travel,4,2,4,4,4,4,2,7,2,30,11,3,32,LowRisk,0.0965,Stay,LOW
+1059,39,Female,Married,Human Resources,Human Resources,2,13468,82,14971,15,3,No,Non-Travel,3,4,3,2,3,3,5,14,4,27,10,4,26,LowRisk,0.0962,Stay,LOW
+1060,49,Female,Single,Human Resources,Human Resources,3,8477,94,18124,18,2,No,Non-Travel,2,4,4,3,2,3,2,2,4,9,7,3,19,LowRisk,0.0963,Stay,LOW
+1061,41,Female,Divorced,Research & Development,Laboratory Technician,4,16727,86,10783,13,1,No,Travel_Frequently,2,4,2,3,3,4,5,10,3,16,5,1,29,LowRisk,0.0959,Stay,LOW
+1062,41,Female,Single,Human Resources,Human Resources,4,15111,93,23945,21,2,No,Non-Travel,3,4,2,2,2,4,3,13,1,27,5,2,15,LowRisk,0.0961,Stay,LOW
+1063,45,Female,Single,Sales,Sales Executive,3,10229,84,15540,21,2,No,Travel_Rarely,4,2,3,2,3,3,4,10,3,21,7,5,25,LowRisk,0.102,Stay,LOW
+1064,33,Female,Single,Research & Development,Manufacturing Director,4,6815,89,23076,24,2,No,Travel_Rarely,2,2,3,4,3,3,5,14,2,26,6,1,15,LowRisk,0.0968,Stay,LOW
+1065,46,Male,Divorced,Sales,Sales Executive,3,16717,72,19504,24,1,No,Non-Travel,2,3,2,2,4,3,2,3,3,17,10,4,19,LowRisk,0.0964,Stay,LOW
+1066,57,Female,Single,Human Resources,Manager,5,5118,80,22490,23,2,No,Travel_Frequently,2,3,4,2,3,4,5,1,0,14,5,0,25,LowRisk,0.0971,Stay,LOW
+1067,49,Female,Married,Sales,Manager,2,11368,86,14168,18,3,No,Non-Travel,3,2,3,4,2,3,2,4,3,17,9,4,24,LowRisk,0.096,Stay,LOW
+1068,41,Female,Married,Sales,Sales Representative,5,16688,71,9715,25,2,No,Travel_Rarely,2,4,4,3,3,4,6,14,1,13,2,4,26,LowRisk,0.0966,Stay,LOW
+1069,39,Female,Single,Sales,Sales Representative,2,9072,85,20343,23,2,No,Travel_Frequently,4,4,4,4,2,4,6,6,0,14,5,1,35,LowRisk,0.0974,Stay,LOW
+1070,54,Female,Single,Sales,Sales Representative,3,6253,59,10528,17,0,No,Travel_Frequently,3,4,2,4,3,3,3,3,4,28,3,5,19,LowRisk,0.1026,Stay,LOW
+1071,41,Male,Married,Sales,Sales Representative,4,16327,97,22710,16,1,No,Travel_Rarely,2,3,4,4,3,4,4,13,3,19,9,3,35,LowRisk,0.1008,Stay,LOW
+1072,55,Male,Married,Sales,Sales Executive,2,14505,80,20163,21,0,No,Travel_Rarely,2,2,3,3,4,3,5,2,1,29,8,2,34,LowRisk,0.1025,Stay,LOW
+1073,31,Female,Divorced,Sales,Sales Representative,4,7862,74,10674,18,1,No,Travel_Rarely,2,4,4,3,2,3,2,5,3,25,3,5,20,LowRisk,0.0986,Stay,LOW
+1074,30,Male,Single,Research & Development,Research Director,4,7533,59,25983,24,3,No,Travel_Rarely,2,3,2,2,2,4,6,8,0,6,8,4,22,LowRisk,0.0974,Stay,LOW
+1075,46,Male,Divorced,Sales,Manager,3,8772,77,8051,22,2,No,Travel_Frequently,3,2,4,4,2,4,2,9,4,19,9,4,5,LowRisk,0.1032,Stay,LOW
+1076,31,Female,Married,Research & Development,Healthcare Representative,4,16244,51,19701,25,0,No,Non-Travel,4,4,4,2,4,4,3,1,2,20,6,5,10,LowRisk,0.0976,Stay,LOW
+1077,52,Female,Divorced,Human Resources,Manager,3,17295,58,10067,24,3,No,Travel_Rarely,2,2,2,2,3,4,6,7,4,18,5,0,29,LowRisk,0.0962,Stay,LOW
+1078,39,Female,Single,Human Resources,Human Resources,4,8476,57,20059,19,3,Yes,Travel_Rarely,3,2,3,4,3,4,6,5,0,26,7,0,18,LowRisk,0.0966,Stay,LOW
+1079,47,Female,Married,Human Resources,Human Resources,2,5311,70,17687,17,3,Yes,Non-Travel,4,3,3,3,2,4,6,7,2,23,1,0,26,LowRisk,0.0961,Stay,LOW
+1080,41,Male,Single,Human Resources,Manager,3,17904,88,22358,13,1,No,Non-Travel,4,3,3,3,4,3,6,3,3,14,6,3,29,LowRisk,0.096,Stay,LOW
+1081,34,Female,Married,Sales,Manager,4,14642,67,16179,14,0,No,Travel_Rarely,4,3,4,2,3,4,5,4,4,12,12,3,11,LowRisk,0.1014,Stay,LOW
+1082,57,Male,Married,Sales,Sales Executive,3,15687,78,10876,25,2,No,Travel_Frequently,2,4,4,3,3,3,3,13,2,19,4,0,11,LowRisk,0.098,Stay,LOW
+1083,55,Female,Single,Sales,Sales Executive,4,13077,86,20088,20,1,No,Non-Travel,3,3,4,4,3,4,5,14,4,5,3,2,25,LowRisk,0.0971,Stay,LOW
+1084,44,Female,Single,Sales,Sales Representative,3,16579,58,22176,21,0,No,Travel_Frequently,2,3,2,2,3,3,4,9,2,30,2,2,11,LowRisk,0.103,Stay,LOW
+1085,34,Female,Divorced,Human Resources,Manager,2,12234,91,13525,22,1,No,Travel_Frequently,4,4,4,3,4,3,2,2,0,23,10,2,25,LowRisk,0.0962,Stay,LOW
+1086,43,Male,Married,Sales,Manager,4,14517,69,23825,16,3,No,Travel_Rarely,2,4,2,2,3,4,5,8,1,13,10,1,15,LowRisk,0.0963,Stay,LOW
+1087,53,Female,Married,Human Resources,Manager,3,16462,73,24874,21,0,No,Non-Travel,3,2,3,3,2,3,2,1,2,15,10,3,12,LowRisk,0.0961,Stay,LOW
+1088,48,Female,Single,Sales,Sales Representative,3,12163,82,23296,20,2,Yes,Non-Travel,2,3,4,3,2,3,6,6,0,4,5,3,24,LowRisk,0.0976,Stay,LOW
+1089,39,Male,Single,Human Resources,Manager,5,6194,66,19985,25,3,No,Non-Travel,3,2,4,4,2,4,6,5,0,15,9,3,29,LowRisk,0.0965,Stay,LOW
+1090,56,Male,Single,Human Resources,Manager,2,10453,73,19111,21,2,No,Non-Travel,4,4,3,4,2,3,2,3,2,28,8,4,19,LowRisk,0.0969,Stay,LOW
+1091,58,Male,Married,Sales,Manager,4,6662,75,17805,22,2,Yes,Travel_Frequently,4,3,3,2,3,4,2,7,4,12,12,5,25,LowRisk,0.0982,Stay,LOW
+1092,45,Female,Divorced,Sales,Manager,3,15819,53,23743,15,3,No,Travel_Frequently,2,2,4,4,2,3,2,8,2,16,3,3,27,LowRisk,0.0978,Stay,LOW
+1093,46,Female,Divorced,Sales,Sales Representative,2,15563,58,24996,16,2,Yes,Travel_Frequently,3,3,2,3,4,4,6,6,2,22,8,1,35,LowRisk,0.1016,Stay,LOW
+1094,47,Female,Single,Sales,Sales Representative,4,16634,68,14792,24,3,No,Travel_Rarely,3,4,4,3,3,3,6,11,4,15,7,2,35,LowRisk,0.0967,Stay,LOW
+1095,31,Female,Divorced,Sales,Sales Representative,2,9674,78,16403,24,3,No,Non-Travel,4,3,4,4,3,3,2,10,4,10,4,0,26,LowRisk,0.099,Stay,LOW
+1096,50,Male,Single,Human Resources,Human Resources,2,10771,71,23479,14,1,No,Travel_Frequently,2,3,4,3,3,3,4,6,2,23,1,0,25,LowRisk,0.0964,Stay,LOW
+1097,47,Male,Single,Human Resources,Human Resources,5,17723,61,9190,19,3,No,Travel_Frequently,3,2,2,3,4,3,4,5,3,23,9,4,20,LowRisk,0.0973,Stay,LOW
+1098,44,Female,Single,Sales,Manager,2,9417,60,23037,23,2,No,Non-Travel,4,3,3,4,4,3,3,10,3,29,7,4,15,LowRisk,0.104,Stay,LOW
+1099,51,Male,Single,Sales,Sales Representative,3,11822,70,16128,13,2,Yes,Non-Travel,3,3,3,3,4,3,4,11,2,25,4,0,26,LowRisk,0.0993,Stay,LOW
+1100,39,Male,Married,Sales,Sales Representative,4,15309,57,17667,18,1,No,Non-Travel,3,2,3,4,4,4,5,12,4,18,9,5,31,LowRisk,0.1025,Stay,LOW

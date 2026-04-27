@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block page_title %}Employee Attrition Prediction System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+ <h2> Welcome to EAPS</h2>
+ <p>AI-Powered B2B HR Analytics &nbsp;·&nbsp; MIT School of Computing</p>
+</div>
+
+<!-- KPI Row -->
+<div class="metric-row">
+ <div class="metric-card">
+ <div class="card-title">Model</div>
+ <div class="card-value">1</div>
+ <div class="card-delta">XGBoost v3</div>
+ </div>
+ <div class="metric-card">
+ <div class="card-title">AUC-ROC</div>
+ <div class="card-value" style="color:#10b981">0.8170</div>
+ <div class="card-delta">XGBoost v3 (calibrated)</div>
+ </div>
+ <div class="metric-card">
+ <div class="card-title">Dataset Size</div>
+ <div class="card-value">1,470</div>
+ <div class="card-delta">IBM HR Analytics dataset</div>
+ </div>
+ <div class="metric-card">
+ <div class="card-title">Features Used</div>
+ <div class="card-value">29</div>
+ <div class="card-delta">25 base + 3 composite + 1 OT</div>
+ </div>
+</div>
+
+{% if models_trained < models_total %}
+<div class="alert alert-warning">
+ &nbsp;<div><strong>XGBoost v3 model not found.</strong> Run <code>python train_xgboost_v3.py</code> first, then refresh this page.</div>
+</div>
+{% endif %}
+
+
+<!-- Paper metrics table -->
+<div class="card mt-24">
+ <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px"> XGBoost v3 IBM HR Dataset Results</h3>
+ <div class="table-wrap">
+ <table>
+ <thead>
+ <tr>
+ <th>Model</th><th>Accuracy</th><th>AUC-ROC</th>
+ <th>F1 Score</th><th>Precision</th><th>Recall</th><th>Threshold</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr style="background:rgba(79,70,229,0.08)">
+ <td style="font-weight:700;color:var(--primary2)">XGBoost v3 </td>
+ <td>65.2%</td><td>0.8170</td>
+ <td>43.8%</td><td>29.7%</td><td>83.3%</td><td>0.500 (Standard)</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ <p style="margin-top:12px;font-size:0.8rem;color:var(--muted)">
+ Trained on IBM HR 1,470 employees · SMOTE balanced · Platt scaling calibration · 29 features (3 composite)
+ </p>
+</div>
+{% endblock %}

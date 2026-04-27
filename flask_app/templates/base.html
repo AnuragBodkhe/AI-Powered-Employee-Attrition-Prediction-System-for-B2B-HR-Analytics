@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>{% block title %}EAPS{% endblock %} Employee Attrition Prediction</title>
+ <meta name="description" content="AI-powered employee attrition prediction system for B2B HR analytics" />
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>" />
+ <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+ <!-- Plotly.js for charts -->
+ <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+ <!-- Theme early check to prevent flicker -->
+ <script>
+ const savedTheme = localStorage.getItem('eaps_theme');
+ if (savedTheme) {
+ document.documentElement.setAttribute('data-theme', savedTheme);
+ } else {
+ // Default to dark
+ document.documentElement.setAttribute('data-theme', 'dark');
+ }
+ </script>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+ <div class="sidebar-logo">
+ <span class="logo-badge"> EAPS</span>
+ <div class="logo-sub">Employee Attrition<br>Prediction System</div>
+ </div>
+
+ <div class="nav-label">Navigation</div>
+
+ <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">
+ <span class="nav-icon"></span> Home
+ </a>
+ <a href="{{ url_for('predict_page') }}" class="nav-link {% if request.endpoint == 'predict_page' %}active{% endif %}">
+ <span class="nav-icon"></span> Predict
+ </a>
+ <a href="{{ url_for('batch_page') }}" class="nav-link {% if request.endpoint == 'batch_page' %}active{% endif %}">
+ <span class="nav-icon"></span> Batch
+ </a>
+ <a href="{{ url_for('dashboard_page') }}" class="nav-link {% if request.endpoint == 'dashboard_page' %}active{% endif %}">
+ <span class="nav-icon"></span> Dashboard
+ </a>
+ <a href="{{ url_for('compare_page') }}" class="nav-link {% if request.endpoint == 'compare_page' %}active{% endif %}">
+ <span class="nav-icon"></span> Model Details
+ </a>
+
+  <!-- Logged-in user & logout -->
+  <div style="margin-top:auto;padding:16px 16px 12px;border-top:1px solid var(--border)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary2));display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.85rem;flex-shrink:0">
+        {{ session.get('username', 'A')[0].upper() }}
+      </div>
+      <div>
+        <div style="font-size:0.85rem;font-weight:600;color:var(--text)">{{ session.get('username', 'admin') }}</div>
+        <div style="font-size:0.72rem;color:var(--muted)">HR Administrator</div>
+      </div>
+    </div>
+    <a href="{{ url_for('logout') }}" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#f87171;font-size:0.8rem;font-weight:600;text-decoration:none;transition:background 0.2s"
+       onmouseover="this.style.background='rgba(239,68,68,0.18)'"
+       onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+      &#8594; Sign Out
+    </a>
+  </div>
+
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+   <h1>{% block page_title %}EAPS{% endblock %}</h1>
+   <span class="topbar-sub">Flask &middot; Python &middot; scikit-learn &middot; XGBoost</span>
+
+   <a href="{{ url_for('logout') }}" style="margin-left: 20px; text-decoration: none; color: var(--muted); font-size: 0.9rem;">Sign Out</a>
+
+   <button id="theme-toggle" class="btn btn-outline btn-sm" style="margin-left: 15px; border-radius: 50%; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border: 1px solid var(--border); background: var(--bg2); color: var(--text); cursor: pointer; transition: all 0.2s;" title="Toggle Theme">
+   <span id="theme-icon"></span>
+   </button>
+  </div>
+
+ <div class="content">
+ {% block content %}{% endblock %}
+ </div>
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
