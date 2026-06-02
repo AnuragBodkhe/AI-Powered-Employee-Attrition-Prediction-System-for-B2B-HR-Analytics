@@ -25,11 +25,9 @@ env/
 .ipynb_checkpoints/
 *.ipynb
 
-# Models (large binary files — use Git LFS or store separately)
-models/*.pkl
-
-# Data files (large CSVs)
-data/*.csv
+# Models and data are included in the repo
+# models/*.pkl
+# data/*.csv
 
 # OS files
 .DS_Store
