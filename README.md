@@ -27,8 +27,6 @@ EAPS predicts employee attrition risk using four classical ML algorithms trained
 
 Watch the system in action! ▶️
 
-https://github.com/AnuragBodkhe/AI-Powered-Employee-Attrition-Prediction-System-for-B2B-HR-Analytics/assets/demo-video.mp4
-
 **To view the full demo video:** [Open Demo Video](https://drive.google.com/file/d/17kx-nCpXlVWJRVJ9qgZ0SAXTP92mUQkk/view?usp=drive_link)
 
 > **Video Features:** System overview • Prediction interface • SHAP explainability • Dashboard analytics • Batch processing
