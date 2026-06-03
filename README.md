@@ -13,12 +13,25 @@
 
 ## 🎯 Overview
 
-EAPS predicts employee attrition risk using four classical ML algorithms trained on the **IBM HR Analytics dataset** (1,470 employees, 30 features). It is built as a production-ready **Flask web application** with:
+EAPS predicts employee attrition risk using four classical ML algorithms trained on the **IBM HR Analytics dataset** (1,470 employees, 30 features). It is built as a production-ready **Flask web application** with explainable AI.
 
+### Key Capabilities
 - **Single-employee prediction** with SHAP explainability
 - **Batch CSV prediction** with downloadable results
 - **Interactive analytics dashboard** (Plotly charts)
 - **Model comparison** (metrics table, radar chart, leaderboard)
+
+---
+
+## 🎬 Project Demo
+
+Watch the system in action! ▶️
+
+https://github.com/AnuragBodkhe/AI-Powered-Employee-Attrition-Prediction-System-for-B2B-HR-Analytics/assets/demo-video.mp4
+
+**To view the full demo video:** [Open Demo Video](https://drive.google.com/file/d/17kx-nCpXlVWJRVJ9qgZ0SAXTP92mUQkk/view?usp=drive_link)
+
+> **Video Features:** System overview • Prediction interface • SHAP explainability • Dashboard analytics • Batch processing
 
 ---
 
