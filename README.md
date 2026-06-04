@@ -1,4 +1,4 @@
-# 📊 Employee Attrition Prediction System (EAPS)
+# Employee Attrition Prediction System (EAPS)
 
 > **AI-Powered B2B HR Analytics** | MIT School of Computing  
 > *Anurag Bodkhe et al.*
@@ -11,7 +11,7 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
 EAPS predicts employee attrition risk using four classical ML algorithms trained on the **IBM HR Analytics dataset** (1,470 employees, 30 features). It is built as a production-ready **Flask web application** with explainable AI.
 
@@ -23,9 +23,9 @@ EAPS predicts employee attrition risk using four classical ML algorithms trained
 
 ---
 
-## 🎬 Project Demo
+## Project Demo
 
-Watch the system in action! ▶️
+Watch the system in action!
 
 **To view the full demo video:** [Open Demo Video](https://drive.google.com/file/d/17kx-nCpXlVWJRVJ9qgZ0SAXTP92mUQkk/view?usp=drive_link)
 
@@ -33,7 +33,7 @@ Watch the system in action! ▶️
 
 ---
 
-## 📈 Model Performance (IBM HR — SMOTE balanced)
+## Model Performance (IBM HR — SMOTE balanced)
 
 | Model | Accuracy | AUC-ROC | F1 Score | Precision | Recall |
 |---|---|---|---|---|---|
@@ -42,11 +42,11 @@ Watch the system in action! ▶️
 | **Random Forest** | **96.96%** | **0.9979** | **0.9703** | 0.9496 | **0.9919** |
 | XGBoost | 95.55% | 0.9972 | 0.9567 | 0.9310 | 0.9838 |
 
-> 🏆 **Best Model: Random Forest** (AUC-ROC = 0.9979)
+> **Best Model: Random Forest** (AUC-ROC = 0.9979)
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 ├── eaps_ml_pipeline.py        ← Train all 4 models, save .pkl + result plots
@@ -96,7 +96,7 @@ Watch the system in action! ▶️
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install dependencies
 ```bash
@@ -120,7 +120,7 @@ App opens at **http://localhost:5000**
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ```bash
 # Build
@@ -134,15 +134,15 @@ docker run -p 5000:5000 eaps
 
 ---
 
-## 📋 Features
+## Features
 
 | Page | URL | Description |
 |---|---|---|
-| 🏠 **Home** | `/` | System overview + model status |
-| 🎯 **Predict** | `/predict` | 30-field form → instant risk score + SHAP waterfall + HR tips |
-| 📂 **Batch** | `/batch` | Upload CSV → predict all → download results with risk labels |
-| 📊 **Dashboard** | `/dashboard` | Dept/role/age/income/overtime charts (Plotly) |
-| 🔬 **Compare** | `/compare` | Radar chart, bar chart, AUC leaderboard, paper metrics table |
+| **Home** | `/` | System overview + model status |
+| **Predict** | `/predict` | 30-field form → instant risk score + SHAP waterfall + HR tips |
+| **Batch** | `/batch` | Upload CSV → predict all → download results with risk labels |
+| **Dashboard** | `/dashboard` | Dept/role/age/income/overtime charts (Plotly) |
+| **Compare** | `/compare` | Radar chart, bar chart, AUC leaderboard, paper metrics table |
 
 ### REST API Endpoints
 
@@ -154,7 +154,7 @@ docker run -p 5000:5000 eaps
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -167,13 +167,13 @@ docker run -p 5000:5000 eaps
 
 ---
 
-## 👨‍💻 Authors
+## Authors
 
 - **Anurag Bodkhe** — MIT School of Computing  
 - Research Paper: *AI-Powered Employee Attrition Prediction System for B2B HR Analytics*
 
 ---
 
-## 📄 License
+## License
 
 MIT License — see [LICENSE](LICENSE) for details.
